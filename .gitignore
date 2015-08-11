@@ -3,6 +3,7 @@
 
 #Temp files
 texts
+*.data
 
 *.class
 
