@@ -6,44 +6,24 @@ import java.util.*;
  *         Innopolis University
  *         Summer School 2015
  */
-public class WorkingWithNumbers3 {
+public class WorkingWithNumbersFinal {
+
+
 
     List<List<Double>> numbers = new ArrayList<>();
     int arraysLenght;
 
-    private File fileChoosing() {
-        File file;
-        Scanner inpReader = new Scanner(System.in);
-        String userAnswer;
-        do {
-            System.out.println("Enter the file name: ");
-            userAnswer = inpReader.nextLine();
-            file = new File(userAnswer);
-            if (!file.exists()) {
-                System.out.println("File not exist");
-                System.out.println("Do you want to create new file with this name? (y/n/exit)");
-                userAnswer = inpReader.nextLine();
-                if (userAnswer.toLowerCase().equals("exit")) {
-                    System.exit(0);
-                }
-                if (userAnswer.toLowerCase().equals("y")) {
-                    try {
-                        file.createNewFile();
-                    } catch (IOException ex) {
-                        System.out.println("Error in creating the file: " + ex.getMessage());
-                        System.out.println("Let's try to create or open another file.");
-                    }
-
-                } else {
-                    System.out.println("Then choose another file.");
-                }
-            }
-        }
-        while (!file.exists());
-        return file;
+    public static void main(String[] args) {
+        WorkingWithNumbersFinal program = new WorkingWithNumbersFinal();
+        program.readOrModifyDataFromFile();
+        System.out.println("Thank you for using the program!");
     }
 
-    public void start() {
+    public int getSize() {
+        return numbers.get(0).size();
+    }
+
+    public void readOrModifyDataFromFile() {
         System.out.println("Hello!");
         File file = fileChoosing();
         Scanner inpReader = new Scanner(System.in);
@@ -62,7 +42,6 @@ public class WorkingWithNumbers3 {
                 switch (answer.trim()) {
                     case "1":
                         readFromFile(file);
-                        printNumbers();
                         break;
                     case "2":
                         writeToFile(file);
@@ -94,6 +73,13 @@ public class WorkingWithNumbers3 {
                     numbersLine.add(Double.parseDouble(line[i]));
                 }
                 numbers.add(numbersLine);
+
+                if(arraysLenght != 0 && arraysLenght !=  numbersLine.size()) {
+                    throw new InputMismatchException("Line sizes are not equal");
+                }
+                else {
+                    arraysLenght = numbersLine.size();
+                }
             }
 
             if (numbers.size() == 0) {
@@ -101,16 +87,6 @@ public class WorkingWithNumbers3 {
                         "it is not well-formatted.");
             }
         }
-    }
-
-    private void printNumbers() {
-        for (List<Double> line : numbers) {
-            for (Double value : line) {
-                System.out.print(value + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
     }
 
     public void writeToFile(File file) throws IOException {
@@ -123,6 +99,58 @@ public class WorkingWithNumbers3 {
 
         savingTheFile(file);
     }
+
+    // TODO: write this
+    public List<List<Double>> getNumbers() {
+        return numbers;
+    }
+
+    public int getArraysLenght() {
+        return arraysLenght;
+    }
+
+    private File fileChoosing() {
+        File file;
+        Scanner inpReader = new Scanner(System.in);
+        String userAnswer;
+        do {
+            System.out.println("Enter the file name. System will automatically add extension .data ");
+            userAnswer = inpReader.nextLine();
+            file = new File(userAnswer + ".data");
+            if (!file.exists()) {
+                System.out.println("File not exist");
+                System.out.println("Do you want to create new file with this name? (y/n/exit)");
+                userAnswer = inpReader.nextLine();
+                if (userAnswer.toLowerCase().equals("exit")) {
+                    System.exit(0);
+                }
+                if (userAnswer.toLowerCase().equals("y")) {
+                    try {
+                        file.createNewFile();
+                    } catch (IOException ex) {
+                        System.out.println("Error in creating the file: " + ex.getMessage());
+                        System.out.println("Let's try to create or open another file.");
+                    }
+
+                } else {
+                    System.out.println("Then choose another file.");
+                }
+            }
+        }
+        while (!file.exists());
+        return file;
+    }
+
+    public void printNumbers() {
+        for (List<Double> line : numbers) {
+            for (Double value : line) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
 
     private void askingTheLenght() {
         Scanner inputReader = null;
@@ -299,12 +327,12 @@ public class WorkingWithNumbers3 {
                 switch (temp) {
                     case "1":
                         do {
-                            // TODO: It needs two enters. Why? - repaired
+                            // TODO: It needs two enters. Why?
                             System.out.println("Enter new numbers line: ");
                             correctNumber = true;
-                            String[] line = inputReader.nextLine().split("\\s");
                             try {
                                 List<Double> values = new ArrayList<>();
+                                String[] line = inputReader.nextLine().split("\\s");
                                 for (int i = 0; i < arraysLenght; i++) {
                                     values.add(Double.parseDouble(line[i]));
                                 }
@@ -314,7 +342,7 @@ public class WorkingWithNumbers3 {
                                 System.out.println("The number line is incorrect. Correct example: '3.1415 -2 0 22.1'");
                                 System.out.println("Try to add another or write 'exit'");
                             }
-                            if (line.equals("exit")) {
+                            if (inputReader.nextLine().toLowerCase().equals("exit")) {
                                 System.exit(0);
                             }
                         } while (!correctNumber);
@@ -332,9 +360,5 @@ public class WorkingWithNumbers3 {
         }
     }
 
-    public static void main(String[] args) {
-        WorkingWithNumbers3 program = new WorkingWithNumbers3();
-        program.start();
-        System.out.println("Thank you for using the program!");
-    }
+
 }
